@@ -1,0 +1,289 @@
+
+\chapter{附\hskip\ccwd{}录}
+
+
+\section{程序源代码}
+
+R实现多期二叉树：
+\begin{lstlisting}
+# 实现二叉树定价
+
+# 安装fOptions包
+#install.packages("fOptions")
+#install.packages("timeDate")
+#install.packages("timeSeries")
+#install.packages("fBasics")
+
+# 加载fOptions包
+library(timeDate)
+library(timeSeries)
+library(fBasics)
+library(fOptions)
+
+CRRBinomialTreeOption(TypeFlag='ce', S=100, X=110,
+ Time=6/12, r=0.05, b=0.05, sigma=0.2, n=3,
+ title="二叉树定价")
+
+# BS模型定价
+GBSOption(TypeFlag = 'c', S=100, X=110, Time=6/12, r=0.05, 
+b=0.05, sigma = 0.2, title="Black-Schools定价" )@price
+
+
+# 实现3期二叉树定价
+CRRTree=BinomialTreeOption(TypeFlag = 'pa', S=100, X=110, 
+Time=6/12, r=0.05, b=0.05, sigma=0.2, n=3)
+
+BinomialTreePlot(CRRTree, dy=1, cex=0.8, ylim=c(-5,5), 
+xlab='n期', ylab='期权价值', main='选择树')
+
+
+# 实现20期二叉树定价
+CRRTree=BinomialTreeOption(TypeFlag = 'pa', S=100, X=110, 
+Time=6/12, r=0.05, b=0.05, sigma=0.2, n=20)
+
+BinomialTreePlot(CRRTree, dy=1, cex=0.8, ylim=c(-22,22), 
+xlab='n期', ylab='期权价值', main='选择树')
+\end{lstlisting}
+
+
+SAS实现多期二叉树：
+\begin{lstlisting}	
+proc iml;
+/* 看涨期权的定价公式 */
+start call(i,sigma,t,S,X,n);
+R=exp(i*t/n);
+u=exp(sigma*sqrt(t/n));
+d=exp(-sigma*sqrt(t/n));
+q=(r-d)/(u-d);
+index=(n:0);
+matrix=j(n+1,3,.);
+do i=1 to n+1;
+matrix[i,1]=comb(n,index[i]);
+matrix[i,2]=q**index[i]*(1-q)**(n-index[i]);
+matrix[i,3]=max(S*u**index[i]*d**(n-index[i])-X,0);
+end;
+c=matrix[,#][+,] / R ** n;
+return(c);
+finish call;
+
+/* 看跌期权的定价公式 */
+start put(i,sigma,t,S,X,n);
+R=exp(i*t/n);
+u=exp( sigma * sqrt(t/n) );
+d=exp(-sigma * sqrt(t/n) );
+q=(r-d) / (u-d);
+index=(n:0);
+matrix=j(n+1,3,.);
+do i=1 to n+1;
+matrix[i,1]=comb(n,index[i]);
+matrix[i,2]=q**index[i]*(1-q)**(n-index[i]);
+matrix[i,3]=max(X-S*u**index[i]*d**(n-index[i]),0);
+end;
+p=matrix[,#][+,] / R ** n;
+return(p);
+finish put;
+
+/* 调整n的大小，并计算看涨期权和看跌期权 */
+do n=5 to 1000 by 5;
+call=j(nrow(n),1,.);
+put=j(nrow(n),1,.);
+mattrib call format=5.3 put format=5.3;
+do k=1 to nrow(n);
+call[k]=round(call(0.05,0.1,1,100,100,n[k]),0.001);
+put[k]=round(put(0.05,0.1,1,100,100,n[k]),0.001);
+end;
+print n call put;
+end;
+
+/* 调整i的大小，并计算看涨期权和看跌期权 */
+do i=0.002 to 0.1 by 0.002;
+call=j(nrow(i),1,.);
+put=j(nrow(i),1,.);
+mattrib i format=percent7.1 call format=5.3
+ put format=5.3;
+do k=1 to nrow(i);
+call[k]=round(call(i[k],0.1,1,100,100,1000),0.001);
+put[k]=round(put(i[k],0.1,1,100,100,1000),0.001);
+end;
+print i call put;
+end;
+
+/* 调整sigma的大小，并计算看涨期权和看跌期权 */
+do sigma=0.01 to 0.5 by 0.01;
+call=j(nrow(sigma),1,.);
+put=j(nrow(sigma),1,.);
+mattrib sigma format=percent7.1 call format=5.3 
+put format=5.3;
+do k=1 to nrow(sigma);
+call[k]=round(call(0.05,sigma[k],1,100,100,1000),0.001);
+put[k]=round(put(0.05,sigma[k],1,100,100,1000),0.001);
+end;
+print sigma call put;
+end;
+
+/* 调整t的大小，并计算看涨期权和看跌期权 */
+do t=0.1 to 5 by 0.1;
+call=j(nrow(t),1,.);
+put=j(nrow(t),1,.);
+mattrib t format=5.1 call format=5.3 put format=5.3;
+do k=1 to nrow(t);
+call[k]=round(call(0.05,0.1,t[k],100,100,1000),0.001);
+put[k]=round(put(0.05,0.1,t[k],100,100,1000),0.001);
+end;
+print t call put;
+end;
+
+/* 调整x的大小，并计算看涨期权和看跌期权 */
+do x=80 to 130 by 1;
+call=j(nrow(x),1,.);
+put=j(nrow(x),1,.);
+mattrib x format=5.1 call format=5.3 put format=5.3;
+do k=1 to nrow(x);
+call[k]=round(call(0.05,0.1,1,100,x[k],1000),0.001);
+put[k]=round(put(0.05,0.1,1,100,x[k],1000),0.001);
+end;
+print x call put;
+end;
+quit;
+\end{lstlisting}
+
+Python编写StockOption类：
+\begin{Python}
+	
+	# -*- coding: utf-8 -*-
+	"""
+	Created on Fri May  3 10:08:18 2019
+	
+	@author: 赵赞豪
+	"""
+	
+	# 编写StockOption类
+	import math
+	
+	class StockOption(object):
+	def __init__(self, S0, K, r, T, N, params):
+	self.S0 = S0
+	self.K  = K
+	self.r  = r
+	self.T  = T
+	self.N  = max(1, N)
+	self.STs= None
+	
+	self.pu          = params.get("pu", 0)
+	self.pd          = params.get("pd", 0)
+	self.div         = params.get("div", 0)
+	self.sigma       = params.get("sigma", 0)
+	self.is_call     = params.get("is_call", True)
+	self.is_european = params.get("is_eu", True)
+	
+	self.dt = T/float(N)
+	self.df = math.exp(-(r-self.div)*self.dt)
+		
+\end{Python}
+
+
+Python编写BinomialEuropeanOption类：
+\begin{Python}
+	# -*- coding: utf-8 -*-
+	"""
+	Created on Fri May  3 10:46:08 2019
+	
+	@author: 赵赞豪
+	"""
+	
+	
+	from StockOption import StockOption
+	import math
+	import numpy as np
+	
+	class BinomialEuropeanOption(StockOption):
+	def __setup_parameters__(self):
+	self.M  = self.N + 1
+	self.u  = 1 + self.pu
+	self.d  = 1 - self.pd
+	self.qu = (math.exp((self.r-self.div)*self.dt) - self.d) / (self.u-self.d)
+	self.qd = 1-self.qu
+	
+	def _initialize_stock_price_tree_(self):
+	self.STs = np.zeros(self.M)
+	for i in range(self.M):
+	self.STs[i] = self.S0*(self.u**(self.N-i))*(self.d**i)
+	
+	def _initialize_payoffs_tree_(self):
+	payoffs = np.maximum(0, (self.STs - self.K) if self.is_call else (self.K - self.STs))
+	return payoffs
+	
+	def _traverse_tree_(self, payoffs):
+	for i in range(self.N):
+	payoffs = (payoffs[:-1] * self.qu + payoffs[1:] * self.qd) * self.df
+	return payoffs
+	
+	def __begin_tree_traversal__(self):
+	payoffs = self._initialize_payoffs_tree_()
+	return self._traverse_tree_(payoffs)
+	
+	def price(self):
+	self.__setup_parameters__()
+	self._initialize_stock_price_tree_()
+	payoffs = self.__begin_tree_traversal__()
+	return payoffs[0]
+\end{Python}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{附录的图和表}
+以下内容用来测试附录中的插图和插表是否正常，主要的关注点在题注：
+
+\begin{figure}[tbh]
+\centering
+\includegraphics[width=0.5\linewidth]{CQUbadge}
+\caption{附录插图测试}
+\label{fig:cqubadge}
+\end{figure}
+
+\begin{figure}[tbh]
+	\centering
+	\includegraphics[width=0.5\linewidth]{CQUbadge}
+	\caption{附录插图测试}
+	\label{fig:cqubadge2}
+\end{figure}
+
+\begin{table}[htb]
+	\centering\colsep[24pt]
+	\caption{本课题研究的两个自变量}
+	\label{tab:inroVarible}
+	\begin{tabularx}{\linewidth}{cl}
+		\toprule
+		\headcell{自变量} & \headcell{自变量可取的值} \\
+		\midrule\setxuhao[6]
+		是否接触大气 & \xuhao[1] 接触大气 \xuhao 氮气保护 \\\setxuhao[2]
+		溶解方式 & \xuhao[1] 超声30min \xuhao 搅拌1h \xuhao 静置12h\\
+		表格的第三行 & \bigcell{使用\cs{bigcell}\\可主动换行}\\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\begin{equation}
+\alpha\beta\gamma\delta\epsilon\varepsilon\zeta\eta = AB\Gamma\varGamma Z
+\end{equation}\eqlist{附录中的公式编号1，双语}[Equation name in English A]
+
+\begin{equation}
+\alpha\beta\gamma\delta\epsilon\varepsilon\zeta\eta = CD\Gamma\varGamma Z
+\end{equation}\eqlist{附录中的公式编号2，双语}[Equation name in English B]
+
+测试用途：theequation值为：\theequation ，thefigure值为：\thefigure ，thetable值为：\thetable

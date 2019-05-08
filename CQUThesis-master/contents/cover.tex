@@ -1,0 +1,82 @@
+\cqusetup{
+%	************	注意	************
+%	* 1. \cqusetup{}中不能出现全空的行，如果需要全空行请在行首注释
+%	* 2. 不需要的配置信息可以放心地坐视不理、留空、删除或注释（都不会有影响）
+%	*
+%	********************************
+% ===================
+%	论文的中英文题目
+% ===================
+  ctitle = {基于大数据下二叉树定价实现},
+  etitle = {Binomial Tree Pricing Practice Based on Big Data},
+% ===================
+% 作者部分的信息
+% \secretize{}为盲审标记点，在打开盲审开关时内容会自动被替换为***输出，盲审开关默认关闭
+% ===================
+  cauthor = \secretize{赵赞豪},	% 你的姓名，以下每项都以英文逗号结束
+  eauthor = \secretize{Zanhao~Zhao},	% 姓名拼音，~代表不会断行的空格
+  studentid = \secretize{11501040136},	% 仅本科生，学号
+  csupervisor = \secretize{肖枝洪~~教授},	% 导师的姓名
+  esupervisor = \secretize{{Prof.~Zhihong Xiao}},	% 导师的姓名拼音
+  % cassistsupervisor = \secretize{}, % 本科生可选，助理指导教师姓名，不用时请留空为{}
+  % cextrasupervisor = \secretize{}, % 本科生可选，校外指导教师姓名，不用时请留空为{}
+  % eassistsupervisor = \secretize{}, % 本科生可选，助理指导教师或/和校外指导教师姓名拼音，不用时请留空为{}
+  cpsupervisor = \secretize{肖枝洪~~教授}, % 仅专硕，兼职导师姓名
+  epsupervisor = \secretize{Prof.~Zhihong Xiao},	% 仅专硕，兼职导师姓名拼音
+  cclass = 理学,	% 博士生和学硕填学科门类，学硕填学科类型
+  edgree = {Mathematics and Applied Mathematics (Mathematical Finance) },	% 专硕填Professional Degree，其他按实情填写
+% 提示：如果内容太长，可以用\zihao{}命令控制字号，作用范围：{}内
+  cmajor = {\zihao{-4}数学与应用数学（数理金融）},	% 专硕不需填，填写专业名称
+  emajor = Mathematics and Applied Mathematics (Mathematical Finance) , % % 专硕不需填，填写专业英文名称
+% ===================
+% 底部的学院名称和日期
+% ===================
+  cdepartment = 理学院,	%学院名称
+  edepartment = College of Science ,	%学院英文名称
+% ===================
+% 封面的日期可以自动生成（注释掉时），也可以解除注释手动指定，例如：二〇一六年五月
+% ===================
+%	mycdate = {中文日期},
+%	myedate = {Date in English},
+}% End of \cqusetup
+% ===================
+%
+% 论文的摘要
+%
+% ===================
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{cabstract}	% 中文摘要
+	本文档运用了\LaTeX{}进行编译生成文档。
+	
+	本文主要讲述基于大数据下的二叉树期权定价模型的实现方法、实现步骤、实现结果的展示。
+	
+	首先，本文讲述了期权的含义，以及传统期权定价中的二叉树模型、Black-Schools期权定价模型、蒙特卡罗期权定价模型。
+	
+	然后，本文接着讲述了基于大数据下的期权定价模型。
+	
+	再接着就是对三种传统期权定价模型的实现。在这里，主要运用SAS、R、Python这三种语言分别对传统期权定价下的二叉树模型、Black-Schools期权定价模型、蒙特卡罗期权定价模型进行实现。然后是对基于大数据下的期权定价模型进行实现。
+	
+	
+	
+	
+	
+  
+
+\end{cabstract}
+% 中文关键词，请使用英文逗号分隔：
+\ckeywords{期权定价,二叉树,BS模型,蒙特卡罗,大数据}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{eabstract}	% 英文摘要
+	
+	English abstract(none).
+	
+	
+\end{eabstract}
+% 英文关键词，请使用英文逗号分隔，关键词内可以空格：
+\ekeywords{bachelor, none}
+
+% 封面和摘要配置完成
